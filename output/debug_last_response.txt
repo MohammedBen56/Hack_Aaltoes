@@ -1,0 +1,17 @@
+```json
+{
+  "building_outline": {
+    "description": "Rectangular duplex building with two holiday apartments (A and B). The heated envelope forms a simple rectangle.",
+    "total_length_mm": 14472,
+    "total_width_mm": 9168,
+    "wall_segments": [
+      {
+        "id": "N1",
+        "direction": "north",
+        "length_mm": 14472,
+        "description": "Full north wall of the heated building envelope.",
+        "is_heated_envelope": true,
+        "has_porch_in_front": false
+      },
+      {
+        "id": "S

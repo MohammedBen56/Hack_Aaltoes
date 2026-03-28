@@ -1,0 +1,921 @@
+{
+  "annotations": {
+    "floor_plan": {
+      "dimensions_mm": [
+        {
+          "value": 1800,
+          "raw": "0081",
+          "x": 1116.9146827092695,
+          "y": 155.27684027603686
+        },
+        {
+          "value": 7703,
+          "raw": "7703",
+          "x": 1117.2146823554494,
+          "y": 300.3766691450968
+        },
+        {
+          "value": 9514,
+          "raw": "9514",
+          "x": 1116.9146827092695,
+          "y": 505.4764272501568
+        },
+        {
+          "value": 9514,
+          "raw": "9514",
+          "x": 1116.9146827092695,
+          "y": 744.5761452556168
+        },
+        {
+          "value": 7703,
+          "raw": "7703",
+          "x": 1116.9146827092695,
+          "y": 946.3759072526968
+        },
+        {
+          "value": 1800,
+          "raw": "0081",
+          "x": 1116.9146827092695,
+          "y": 1085.0757436699168
+        },
+        {
+          "value": 2305,
+          "raw": "2305",
+          "x": 438.89948236134,
+          "y": 27.617458191289643
+        },
+        {
+          "value": 2825,
+          "raw": "2825",
+          "x": 584.29931087658,
+          "y": 27.617458191289643
+        },
+        {
+          "value": 2500,
+          "raw": "2500",
+          "x": 735.2991327871799,
+          "y": 27.617458191289643
+        },
+        {
+          "value": 1538,
+          "raw": "1538",
+          "x": 849.79899774588,
+          "y": 27.617458191289643
+        },
+        {
+          "value": 2475,
+          "raw": "2475",
+          "x": 963.4988636481,
+          "y": 27.617458191289643
+        },
+        {
+          "value": 9168,
+          "raw": "9168",
+          "x": 633.4992528501,
+          "y": 45.917436608269554
+        },
+        {
+          "value": 1800,
+          "raw": "0081",
+          "x": 259.3156941627096,
+          "y": 162.07683225611686
+        },
+        {
+          "value": 14472,
+          "raw": "27441",
+          "x": 259.3156941627096,
+          "y": 621.2201472154525
+        },
+        {
+          "value": 1800,
+          "raw": "0081",
+          "x": 259.3156941627096,
+          "y": 1084.5757442596168
+        },
+        {
+          "value": 9168,
+          "raw": "9168",
+          "x": 633.4992528501,
+          "y": 1199.4155761709594
+        },
+        {
+          "value": 2288,
+          "raw": "2288",
+          "x": 438.39948295104,
+          "y": 1213.7158593051854
+        },
+        {
+          "value": 2842,
+          "raw": "2842",
+          "x": 583.89931134834,
+          "y": 1213.7158593051854
+        },
+        {
+          "value": 2500,
+          "raw": "2500",
+          "x": 735.2991327871799,
+          "y": 1213.7158593051854
+        },
+        {
+          "value": 1538,
+          "raw": "1538",
+          "x": 849.6989978638201,
+          "y": 1213.7158593051854
+        },
+        {
+          "value": 2475,
+          "raw": "2475",
+          "x": 963.4988636481,
+          "y": 1213.7158593051854
+        },
+        {
+          "value": 9168,
+          "raw": "9168",
+          "x": 1648.9980551694,
+          "y": 67.51741113322942
+        },
+        {
+          "value": 1000,
+          "raw": "1000",
+          "x": 1668.3848965349323,
+          "y": 442.0169694479297
+        },
+        {
+          "value": 1000,
+          "raw": "0001",
+          "x": 1700.7139941755495,
+          "y": 396.34744275383287
+        },
+        {
+          "value": 1000,
+          "raw": "1000",
+          "x": 1667.0848980681521,
+          "y": 500.11690092478966
+        },
+        {
+          "value": 1000,
+          "raw": "1000",
+          "x": 1668.3848965349323,
+          "y": 812.7165322443497
+        },
+        {
+          "value": 1000,
+          "raw": "0001",
+          "x": 1700.7139941755495,
+          "y": 816.7479469328935
+        },
+        {
+          "value": 1000,
+          "raw": "1000",
+          "x": 1667.0848980681521,
+          "y": 754.7166006495497
+        },
+        {
+          "value": 1600,
+          "raw": "0061",
+          "x": 1603.2141091670494,
+          "y": 334.64519144235385
+        },
+        {
+          "value": 1600,
+          "raw": "0061",
+          "x": 1603.2141091670494,
+          "y": 849.8447755422477
+        },
+        {
+          "value": 14472,
+          "raw": "27441",
+          "x": 1305.5144602744294,
+          "y": 615.7201537021524
+        }
+      ],
+      "elevations": [],
+      "room_labels": [
+        {
+          "name": "KÄYTÄVÄ",
+          "x": 567.29933092638,
+          "y": 834.7165062975496
+        },
+        {
+          "name": "IVK",
+          "x": 555.19934519712,
+          "y": 776.1165754103896
+        },
+        {
+          "name": "KUISTI",
+          "x": 570.59932703436,
+          "y": 138.7173271599495
+        },
+        {
+          "name": "KPH",
+          "x": 608.19928268892,
+          "y": 492.51690988822963
+        },
+        {
+          "name": "MH",
+          "x": 464.69945193282,
+          "y": 712.8166500664096
+        },
+        {
+          "name": "MH",
+          "x": 464.59945205076,
+          "y": 528.7168671939496
+        },
+        {
+          "name": "KÄYTÄVÄ",
+          "x": 566.39933198784,
+          "y": 406.6170111986896
+        },
+        {
+          "name": "OLESKELU",
+          "x": 762.69910047162,
+          "y": 816.9165272908697
+        },
+        {
+          "name": "KUISTI",
+          "x": 573.89932314234,
+          "y": 1063.8162360970096
+        },
+        {
+          "name": "WC",
+          "x": 434.999486961,
+          "y": 834.7165062975496
+        },
+        {
+          "name": "KPH",
+          "x": 607.89928304274,
+          "y": 748.7166077259496
+        },
+        {
+          "name": "OLESKELU",
+          "x": 762.69910047162,
+          "y": 424.5169900874297
+        },
+        {
+          "name": "IVK",
+          "x": 556.09934413566,
+          "y": 479.8169248666096
+        },
+        {
+          "name": "MH",
+          "x": 475.29943943118,
+          "y": 941.9163798658697
+        },
+        {
+          "name": "Huone",
+          "x": 624.59926334676,
+          "y": 928.1163961415896
+        },
+        {
+          "name": "Huone",
+          "x": 523.59938246616,
+          "y": 833.3165079487096
+        },
+        {
+          "name": "ET",
+          "x": 627.9992593368,
+          "y": 300.61713621508966
+        },
+        {
+          "name": "MH",
+          "x": 475.29943943118,
+          "y": 299.61713739448965
+        },
+        {
+          "name": "WC",
+          "x": 434.19948790451997,
+          "y": 406.8170109628096
+        },
+        {
+          "name": "VAR",
+          "x": 733.89913443834,
+          "y": 140.11732550878946
+        },
+        {
+          "name": "VAR",
+          "x": 735.0991330230601,
+          "y": 1067.5162317332297
+        },
+        {
+          "name": "VARASTO",
+          "x": 2310.0972754680597,
+          "y": 275.1361662673809
+        },
+        {
+          "name": "VARASTO",
+          "x": 2310.0972754680597,
+          "y": 312.336122393701
+        }
+      ],
+      "structure_labels": [],
+      "page_size": {
+        "width": 3572.0,
+        "height": 1264.0
+      }
+    },
+    "facades": {
+      "dimensions_mm": [],
+      "elevations": [
+        {
+          "value": "-0.020",
+          "x": 255.300099342336,
+          "y": 655.8069275485798
+        },
+        {
+          "value": "-0.400",
+          "x": 164.00006381568,
+          "y": 666.5069317121638
+        },
+        {
+          "value": "+6.900",
+          "x": 314.400122339328,
+          "y": 459.6068512032358
+        },
+        {
+          "value": "+6.317",
+          "x": 279.700108836864,
+          "y": 476.1068576237158
+        },
+        {
+          "value": "+4.015",
+          "x": 132.600051597312,
+          "y": 541.4068830332519
+        },
+        {
+          "value": "+4.015",
+          "x": 415.300161601536,
+          "y": 541.4068830332519
+        },
+        {
+          "value": "+2.846",
+          "x": 491.60019129139204,
+          "y": 574.5068959131238
+        },
+        {
+          "value": "-0.400",
+          "x": 827.7003220746241,
+          "y": 307.9067921737319
+        },
+        {
+          "value": "-0.400",
+          "x": 848.300330090496,
+          "y": 666.5069317121638
+        },
+        {
+          "value": "-0.020",
+          "x": 379.300147593216,
+          "y": 297.2067880101479
+        },
+        {
+          "value": "-0.400",
+          "x": 186.80007268761602,
+          "y": 308.00679221264386
+        }
+      ],
+      "room_labels": [],
+      "structure_labels": [],
+      "page_size": {
+        "width": 2381.0,
+        "height": 842.0
+      }
+    },
+    "section": {
+      "dimensions_mm": [
+        {
+          "value": 3400,
+          "raw": "0043",
+          "x": 318.21612382420994,
+          "y": 441.99239326430063
+        },
+        {
+          "value": 1600,
+          "raw": "0061",
+          "x": 529.8162061620019,
+          "y": 352.2923583602366
+        },
+        {
+          "value": 2400,
+          "raw": "0042",
+          "x": 633.616246552658,
+          "y": 466.6924028755646
+        },
+        {
+          "value": 100,
+          "raw": "100",
+          "x": 1524.6762620937964,
+          "y": 615.7359119561523
+        },
+        {
+          "value": 150,
+          "raw": "150",
+          "x": 1025.3544071502947,
+          "y": 84.6369729979458
+        },
+        {
+          "value": 250,
+          "raw": "052",
+          "x": 1055.7164108002098,
+          "y": 85.25523215319049
+        },
+        {
+          "value": 170,
+          "raw": "170",
+          "x": 1499.2429675531966,
+          "y": 394.93582603845636
+        },
+        {
+          "value": 198,
+          "raw": "198",
+          "x": 1372.4258145981253,
+          "y": 476.9358579462964
+        },
+        {
+          "value": 100,
+          "raw": "100",
+          "x": 1472.5828310912084,
+          "y": 476.9358579462964
+        }
+      ],
+      "elevations": [
+        {
+          "value": "-0.080",
+          "x": 821.600319700992,
+          "y": 536.1348809818112
+        },
+        {
+          "value": "-0.400",
+          "x": 821.600319700992,
+          "y": 554.3348880637952
+        },
+        {
+          "value": "+6.900",
+          "x": 449.60017494835205,
+          "y": 140.43472700702716
+        },
+        {
+          "value": "+6.317",
+          "x": 513.7001998909441,
+          "y": 173.53473988689916
+        },
+        {
+          "value": "+4.015",
+          "x": 235.20009152102398,
+          "y": 304.03479066705927
+        },
+        {
+          "value": "+4.015",
+          "x": 813.400316510208,
+          "y": 304.03479066705927
+        },
+        {
+          "value": "+2.846",
+          "x": 86.600033697792,
+          "y": 370.2348164268032
+        },
+        {
+          "value": "+2.655",
+          "x": 564.100219502592,
+          "y": 381.13482066821126
+        },
+        {
+          "value": "-0.000",
+          "x": 529.00020584448,
+          "y": 531.6348792307713
+        }
+      ],
+      "room_labels": [],
+      "structure_labels": [
+        {
+          "name": "VP",
+          "x": 706.00027471872,
+          "y": 422.63483681669123
+        },
+        {
+          "name": "US1",
+          "x": 1330.5989134744477,
+          "y": 720.315952650322
+        },
+        {
+          "name": "AP1",
+          "x": 1325.8035267124674,
+          "y": 751.5160647909048
+        },
+        {
+          "name": "AP1",
+          "x": 1265.50049243136,
+          "y": 567.9358933562164
+        },
+        {
+          "name": "US1",
+          "x": 1265.0004922368,
+          "y": 208.93575366213634
+        },
+        {
+          "name": "YP1",
+          "x": 1265.0004922368,
+          "y": 37.53568696696834
+        },
+        {
+          "name": "US2",
+          "x": 1265.0004922368,
+          "y": 363.0358136255283
+        },
+        {
+          "name": "VP",
+          "x": 1265.50049243136,
+          "y": 445.03584553336833
+        }
+      ],
+      "page_size": {
+        "width": 2381.0,
+        "height": 842.0
+      }
+    }
+  },
+  "building_outline": {
+    "building_outline": {
+      "description": "The complete building footprint including two holiday apartment units (A and B), porches (KUISTI), and storage rooms (VARASTO).",
+      "total_length_mm": 14472,
+      "total_width_mm": 9168,
+      "heated_length_mm": 10872,
+      "heated_width_mm": 9168,
+      "wall_segments": [
+        {
+          "id": "N1",
+          "direction": "north",
+          "length_mm": 9168,
+          "description": "Full north wall including the VARASTO and KUISTI."
+        },
+        {
+          "id": "S1",
+          "direction": "south",
+          "length_mm": 9168,
+          "description": "Full south wall including the VARASTO and KUISTI."
+        },
+        {
+          "id": "E1",
+          "direction": "east",
+          "length_mm": 14472,
+          "description": "Full east wall including the main building and both KUISTI sections."
+        },
+        {
+          "id": "W1",
+          "direction": "west",
+          "length_mm": 14472,
+          "description": "Full west wall including the main building and both KUISTI sections."
+        }
+      ]
+    },
+    "total_perimeter_mm": 47280,
+    "heated_perimeter_mm": 40080,
+    "confidence_notes": "Total length is derived from the vertical dimension chain on the left (1800 + 14472 + 1800 = 18072, but the 14472 is the overall length, so 1800 + 10872 + 1800 = 14472). The 14472 dimension is explicitly labeled as the overall length on the left side. The total width is derived from the top and bottom horizontal dimension chains (2305 + 2825 + 2500 + 1538 + 2475 = 11643, but the overall width is explicitly labeled as 9168, which is the sum of 2305 + 2825 + 2500 + 1538 = 9168, the 2475 is an internal dimension. The 9168 dimension is explicitly labeled as the overall width on the top and bottom. Heated length excludes the two 1800mm KUISTI sections (14472 - 2*1800 = 10872). Heated width is the same as total width as VARASTO is included in the overall width dimension chain. The 2475mm segment on the right of the top/bottom dimension chain is an internal dimension, not part of the overall exterior width. The 9168mm dimension is the correct overall width."
+  },
+  "facade_results": [
+    {
+      "facade_direction": "north",
+      "wall_height_mm": {
+        "from_ground_to_eave": 4015,
+        "ground_level": 0.0,
+        "eave_level": "+2.848",
+        "ridge_level": "+4.015",
+        "has_gable_triangle": false,
+        "gable_triangle_height_mm": 0,
+        "notes": "Read elevation values from the section drawing"
+      },
+      "wall_length_mm": 18072,
+      "openings": [
+        {
+          "type": "door",
+          "code": "UO 10x21",
+          "width_mm": 1000,
+          "height_mm": 2100,
+          "count": 1
+        },
+        {
+          "type": "door",
+          "code": "UO 15x21",
+          "width_mm": 1500,
+          "height_mm": 2100,
+          "count": 1
+        },
+        {
+          "type": "window",
+          "code": "A-15x5",
+          "width_mm": 1500,
+          "height_mm": 500,
+          "count": 1
+        },
+        {
+          "type": "window",
+          "code": "A-8x21",
+          "width_mm": 800,
+          "height_mm": 2100,
+          "count": 1
+        }
+      ],
+      "cladding_material": {
+        "primary": "VAAKAULKOVERHOUSPANEELI 28x170",
+        "secondary": "ULKOVERHOUSPANEELI 21x95",
+        "primary_coverage_percent": 70,
+        "secondary_coverage_percent": 30
+      },
+      "gross_wall_area_m2": 0,
+      "total_opening_area_m2": 0,
+      "net_cladding_area_m2": 0
+    },
+    {
+      "facade_direction": "south",
+      "wall_height_mm": {
+        "from_ground_to_eave": 4015,
+        "ground_level": 0.0,
+        "eave_level": "+2.955",
+        "ridge_level": "+4.800",
+        "has_gable_triangle": false,
+        "gable_triangle_height_mm": 0,
+        "notes": "Read elevation values from the section drawing"
+      },
+      "wall_length_mm": 18072,
+      "openings": [
+        {
+          "type": "window",
+          "code": "A-15x5",
+          "width_mm": 1500,
+          "height_mm": 500,
+          "count": 4
+        },
+        {
+          "type": "door",
+          "code": "UO 10x21",
+          "width_mm": 1000,
+          "height_mm": 2100,
+          "count": 2
+        },
+        {
+          "type": "door",
+          "code": "UO 9x21",
+          "width_mm": 900,
+          "height_mm": 2100,
+          "count": 1
+        }
+      ],
+      "cladding_material": {
+        "primary": "VAAKAULKOVERHOUSPANEELI 28x170",
+        "secondary": "ULKOVERHOUSPANEELI 21x95",
+        "primary_coverage_percent": 100,
+        "secondary_coverage_percent": 0
+      },
+      "gross_wall_area_m2": 0,
+      "total_opening_area_m2": 0,
+      "net_cladding_area_m2": 0
+    },
+    {
+      "facade_direction": "east",
+      "wall_height_mm": {
+        "from_ground_to_eave": 4015,
+        "ground_level": 0.0,
+        "eave_level": "+2.955",
+        "ridge_level": "+6.300",
+        "has_gable_triangle": true,
+        "gable_triangle_height_mm": 2885,
+        "notes": "Read elevation values from the section drawing"
+      },
+      "wall_length_mm": 11643,
+      "openings": [
+        {
+          "type": "door",
+          "code": "UO 10x21",
+          "width_mm": 1000,
+          "height_mm": 2100,
+          "count": 1
+        },
+        {
+          "type": "window",
+          "code": "A-8x21",
+          "width_mm": 800,
+          "height_mm": 2100,
+          "count": 1
+        }
+      ],
+      "cladding_material": {
+        "primary": "VAAKAULKOVERHOUSPANEELI 28x170",
+        "secondary": "ULKOVERHOUSPANEELI 21x95",
+        "primary_coverage_percent": 90,
+        "secondary_coverage_percent": 10
+      },
+      "gross_wall_area_m2": 0,
+      "total_opening_area_m2": 0,
+      "net_cladding_area_m2": 0
+    },
+    {
+      "facade_direction": "west",
+      "wall_height_mm": {
+        "from_ground_to_eave": 4015,
+        "ground_level": 0.0,
+        "eave_level": "+2.955",
+        "ridge_level": "+6.300",
+        "has_gable_triangle": true,
+        "gable_triangle_height_mm": 2885,
+        "notes": "Read elevation values from the section drawing"
+      },
+      "wall_length_mm": 11643,
+      "openings": [
+        {
+          "type": "window",
+          "code": "A-15x5",
+          "width_mm": 1500,
+          "height_mm": 500,
+          "count": 1
+        },
+        {
+          "type": "door",
+          "code": "UO 10x21",
+          "width_mm": 1000,
+          "height_mm": 2100,
+          "count": 1
+        },
+        {
+          "type": "window",
+          "code": "A-8x21",
+          "width_mm": 800,
+          "height_mm": 2100,
+          "count": 1
+        }
+      ],
+      "cladding_material": {
+        "primary": "VAAKAULKOVERHOUSPANEELI 28x170",
+        "secondary": "ULKOVERHOUSPANEELI 21x95",
+        "primary_coverage_percent": 90,
+        "secondary_coverage_percent": 10
+      },
+      "gross_wall_area_m2": 0,
+      "total_opening_area_m2": 0,
+      "net_cladding_area_m2": 0
+    }
+  ],
+  "quantities": {
+    "perimeter_m": 59.43,
+    "heated_perimeter_m": 47.28,
+    "exterior_wall_surface_area_m2": 238.61,
+    "per_facade": [
+      {
+        "direction": "north",
+        "wall_length_mm": 18072,
+        "wall_height_mm": 4015,
+        "has_gable_triangle": false,
+        "gross_area_m2": 72.56,
+        "triangle_area_m2": 0.0,
+        "opening_area_m2": 7.68,
+        "net_cladding_area_m2": 64.88,
+        "openings": [
+          {
+            "type": "door",
+            "code": "UO 10x21",
+            "width_mm": 1000,
+            "height_mm": 2100,
+            "count": 1
+          },
+          {
+            "type": "door",
+            "code": "UO 15x21",
+            "width_mm": 1500,
+            "height_mm": 2100,
+            "count": 1
+          },
+          {
+            "type": "window",
+            "code": "A-15x5",
+            "width_mm": 1500,
+            "height_mm": 500,
+            "count": 1
+          },
+          {
+            "type": "window",
+            "code": "A-8x21",
+            "width_mm": 800,
+            "height_mm": 2100,
+            "count": 1
+          }
+        ]
+      },
+      {
+        "direction": "south",
+        "wall_length_mm": 18072,
+        "wall_height_mm": 4015,
+        "has_gable_triangle": false,
+        "gross_area_m2": 72.56,
+        "triangle_area_m2": 0.0,
+        "opening_area_m2": 9.09,
+        "net_cladding_area_m2": 63.47,
+        "openings": [
+          {
+            "type": "window",
+            "code": "A-15x5",
+            "width_mm": 1500,
+            "height_mm": 500,
+            "count": 4
+          },
+          {
+            "type": "door",
+            "code": "UO 10x21",
+            "width_mm": 1000,
+            "height_mm": 2100,
+            "count": 2
+          },
+          {
+            "type": "door",
+            "code": "UO 9x21",
+            "width_mm": 900,
+            "height_mm": 2100,
+            "count": 1
+          }
+        ]
+      },
+      {
+        "direction": "east",
+        "wall_length_mm": 11643,
+        "wall_height_mm": 4015,
+        "has_gable_triangle": true,
+        "gross_area_m2": 63.54,
+        "triangle_area_m2": 16.8,
+        "opening_area_m2": 3.78,
+        "net_cladding_area_m2": 59.76,
+        "openings": [
+          {
+            "type": "door",
+            "code": "UO 10x21",
+            "width_mm": 1000,
+            "height_mm": 2100,
+            "count": 1
+          },
+          {
+            "type": "window",
+            "code": "A-8x21",
+            "width_mm": 800,
+            "height_mm": 2100,
+            "count": 1
+          }
+        ]
+      },
+      {
+        "direction": "west",
+        "wall_length_mm": 11643,
+        "wall_height_mm": 4015,
+        "has_gable_triangle": true,
+        "gross_area_m2": 63.54,
+        "triangle_area_m2": 16.8,
+        "opening_area_m2": 4.53,
+        "net_cladding_area_m2": 59.01,
+        "openings": [
+          {
+            "type": "window",
+            "code": "A-15x5",
+            "width_mm": 1500,
+            "height_mm": 500,
+            "count": 1
+          },
+          {
+            "type": "door",
+            "code": "UO 10x21",
+            "width_mm": 1000,
+            "height_mm": 2100,
+            "count": 1
+          },
+          {
+            "type": "window",
+            "code": "A-8x21",
+            "width_mm": 800,
+            "height_mm": 2100,
+            "count": 1
+          }
+        ]
+      }
+    ],
+    "totals": {
+      "total_gross_wall_area_m2": 272.2,
+      "total_opening_area_m2": 25.08,
+      "total_net_cladding_area_m2": 247.12
+    },
+    "materials": {
+      "vaakaulkoverhouspaneeli_28x170": {
+        "area_m2": 172.98,
+        "running_meters": 1193.0,
+        "running_meters_with_waste": 1336.2,
+        "board_count_3m": 446,
+        "board_count_4m": 335
+      },
+      "ulkoverhouspaneeli_21x95": {
+        "area_m2": 74.14,
+        "running_meters": 926.7,
+        "running_meters_with_waste": 1037.9,
+        "board_count_3m": 346,
+        "board_count_4m": 260
+      }
+    },
+    "validation": {
+      "perimeter_closure_check": true,
+      "expected_perimeter_mm": 59430,
+      "calculated_perimeter_mm": 59430,
+      "deviation_percent": 0.0
+    }
+  }
+}
