@@ -23,12 +23,20 @@ CRITICAL RULES:
 
 HOW TO DETERMINE DIMENSIONS:
 - The drawing has DIMENSION CHAINS — lines of sequential measurements along each axis
-- LEFT SIDE vertical chain (x ~ 259): shows the building LENGTH broken into segments (KUISTI depth + main section + KUISTI depth). Sum ALL segments to get total length.
-- RIGHT SIDE vertical chain (x ~ 1117): shows a more detailed breakdown of the same length into room-level segments. Note: some numbers may appear reversed due to text rotation — if a number seems wrong, try reading it backwards.
-- TOP horizontal chain (y ~ 27) and BOTTOM horizontal chain (y ~ 1214): show the building WIDTH broken into room-width segments. Sum ALL segments in the chain to get total width — this may be larger than any single labeled overall dimension if the building has storage extensions.
+- LEFT SIDE vertical chain: shows the building LENGTH broken into segments (KUISTI depth + main section + KUISTI depth). Sum ALL segments to get total length.
+- RIGHT SIDE vertical chain: shows a more detailed breakdown of the same length into room-level segments. Note: some numbers may appear reversed due to text rotation — if a number seems wrong, try reading it backwards.
+- TOP horizontal chain and BOTTOM horizontal chain: show the building WIDTH broken into room-width segments. Sum ALL segments in the chain to get total width — this may be larger than any single labeled overall dimension if the building has storage extensions.
 - The overall width dimension (labeled separately) may only cover the MAIN building width. The full building width includes any VARASTO extension, so sum the individual segments instead.
 - Calculate total_perimeter_mm = 2 * (total_length_mm + total_width_mm)
 - For heated_perimeter_mm: use only the main heated section dimensions (excluding KUISTI and VARASTO)
+
+PROGRAMMATIC CROSS-CHECK:
+I have already computed these building dimensions programmatically from the dimension chains:
+{programmatic_dims_json}
+Use these as your PRIMARY reference for total_length_mm and total_width_mm.
+- North and South walls are the LONG sides (total_length_mm).
+- East and West walls are the SHORT sides / gable ends (total_width_mm).
+- If your visual analysis disagrees with the programmatic values by more than 5%, note it in confidence_notes but STILL use the programmatic values for the wall_segments lengths.
 
 Finnish terms:
 - pohjakuva = floor plan
@@ -87,12 +95,17 @@ FACADE_PROMPT = """You are a Finnish architect analyzing the {direction_fi} faca
 The wall segment data from the floor plan analysis is:
 {wall_segment_json}
 
+HARD CONSTRAINTS (from floor plan analysis — do NOT override these):
+- This facade's wall length is {wall_length_mm}mm. Use this value for wall_length_mm in your response.
+- This wall is a {wall_type_label}. {gable_instruction}
+
 I am providing you with two images:
 1. The facade elevation drawing (julkisivu) for the {direction_en} side
 2. The cross-section drawing (leikkaus B-B) for height reference
 
-{side_description}
-{gable_note}
+VISUAL ANALYSIS REQUIRED:
+- For gable end walls: Find the räystäs (eave) and harjakorkeus (ridge) elevation markers in the cross-section drawing (leikkaus) AND the facade drawing to calculate gable_triangle_height_mm = (ridge_level - eave_level) * 1000.
+- For long walls: Confirm the wall is rectangular (no gable triangle).
 
 Your task: Extract all wall geometry, openings, and cladding information visible in the facade drawing.
 

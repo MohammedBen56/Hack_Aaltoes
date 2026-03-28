@@ -9,6 +9,8 @@ ULKO_RM_PER_M2 = 1000 / ULKO_EFFECTIVE_COVERAGE_MM    # 12.50
 
 WASTE_FACTOR = 1.12
 
+SOKKEL_HEIGHT_MM = 380  # concrete foundation from ~-0.400 to ~-0.020, not clad
+
 
 def calculate_quantities(facade_results: list, total_perimeter_mm: float,
                          heated_perimeter_mm: float = 0,
@@ -26,8 +28,8 @@ def calculate_quantities(facade_results: list, total_perimeter_mm: float,
     for f in facade_results:
         direction = f.get('facade_direction', 'unknown')
         wall_h = f.get('wall_height_mm', {})
-        height_mm = wall_h.get('from_ground_to_eave', 4015)
-        length_mm = f.get('wall_length_mm', 0)
+        height_mm = wall_h.get('from_ground_to_eave') or wall_height_mm
+        length_mm = f.get('wall_length_mm') or 0
 
         # Rectangular wall area (from +-0.000 to eave)
         rect_area_m2 = (length_mm / 1000) * (height_mm / 1000)
@@ -46,8 +48,11 @@ def calculate_quantities(facade_results: list, total_perimeter_mm: float,
             for o in f.get('openings', [])
         )
 
-        # Net cladding = gross minus openings (no separate sokkel deduction — height already starts at +-0.000)
-        net_cladding_area_m2 = max(0.0, gross_area_m2 - opening_area_m2)
+        # Sokkel deduction: concrete foundation strip at the base (not clad)
+        sokkel_area_m2 = (length_mm / 1000) * (SOKKEL_HEIGHT_MM / 1000)
+
+        # Net cladding = gross minus openings minus sokkel
+        net_cladding_area_m2 = max(0.0, gross_area_m2 - opening_area_m2 - sokkel_area_m2)
 
         per_facade.append({
             'direction': direction,
@@ -57,32 +62,33 @@ def calculate_quantities(facade_results: list, total_perimeter_mm: float,
             'gross_area_m2': round(gross_area_m2, 2),
             'triangle_area_m2': round(triangle_area_m2, 2),
             'opening_area_m2': round(opening_area_m2, 2),
+            'sokkel_area_m2': round(sokkel_area_m2, 2),
             'net_cladding_area_m2': round(net_cladding_area_m2, 2),
             'openings': f.get('openings', []),
         })
 
     total_gross = sum(f['gross_area_m2'] for f in per_facade)
     total_openings = sum(f['opening_area_m2'] for f in per_facade)
+    total_sokkel = sum(f['sokkel_area_m2'] for f in per_facade)
     total_net = sum(f['net_cladding_area_m2'] for f in per_facade)
 
     # Exterior wall surface area = total perimeter × wall height (no deductions)
-    # Wall height comes from programmatic elevation marker extraction
     perimeter_m = total_perimeter_mm / 1000
-    wall_height_m = wall_height_mm / 1000 if wall_height_mm > 0 else 4.015
+    # Prefer average of dynamically matched facade heights, fallback to programmatic overall height
+    avg_facade_h = sum(f['wall_height_mm'] for f in per_facade) / max(len(per_facade), 1)
+    wall_height_m = (avg_facade_h if avg_facade_h > 0 else wall_height_mm) / 1000
     exterior_wall_surface_area_m2 = round(perimeter_m * wall_height_m, 2)
 
-    # Material split — use coverage percentages from first facade that has them
-    primary_pct = 0.70
-    secondary_pct = 0.30
-    for f in facade_results:
-        cm = f.get('cladding_material', {})
-        if cm.get('primary_coverage_percent'):
-            primary_pct = cm['primary_coverage_percent'] / 100
-            secondary_pct = cm.get('secondary_coverage_percent', 30) / 100
-            break
-
-    vaaka_area = total_net * primary_pct
-    ulko_area = total_net * secondary_pct
+    # Material split — per-facade, using each facade's own cladding percentages
+    vaaka_area = 0.0
+    ulko_area = 0.0
+    for f_result, f_calc in zip(facade_results, per_facade):
+        cm = f_result.get('cladding_material', {})
+        p_pct = (cm.get('primary_coverage_percent', 70)) / 100
+        s_pct = (cm.get('secondary_coverage_percent', 30)) / 100
+        net = f_calc['net_cladding_area_m2']
+        vaaka_area += net * p_pct
+        ulko_area += net * s_pct
 
     vaaka_rm = vaaka_area * VAAKA_RM_PER_M2
     ulko_rm = ulko_area * ULKO_RM_PER_M2
@@ -108,6 +114,7 @@ def calculate_quantities(facade_results: list, total_perimeter_mm: float,
         'totals': {
             'total_gross_wall_area_m2': round(total_gross, 2),
             'total_opening_area_m2': round(total_openings, 2),
+            'total_sokkel_area_m2': round(total_sokkel, 2),
             'total_net_cladding_area_m2': round(total_net, 2),
         },
         'materials': {

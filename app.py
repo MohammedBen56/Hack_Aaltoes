@@ -136,6 +136,7 @@ def show_results(result: dict):
             'Gross Area (m²)': f"{f['gross_area_m2']:.2f}",
             'Gable Triangle (m²)': f"{f.get('triangle_area_m2', 0):.2f}",
             'Openings (m²)': f"{f['opening_area_m2']:.2f}",
+            'Sokkel (m²)': f"{f.get('sokkel_area_m2', 0):.2f}",
             'Net Cladding (m²)': f"{f['net_cladding_area_m2']:.2f}",
         }
         for f in per_facade

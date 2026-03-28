@@ -40,6 +40,12 @@ def _maybe_reverse(s: str) -> int:
     if trailing_zeros(rev) > trailing_zeros(val):
         return rev
 
+    # Finnish room plausibility: room dimensions are typically 1000-6000mm.
+    # If val > 7000 and its reverse falls in typical room range, prefer the reverse.
+    # Guard: e.g. 9168 reversed is 8619 (>6000), so it stays as 9168.
+    if val > 7000 and 1000 <= rev <= 6000:
+        return rev
+
     return val
 
 
@@ -91,8 +97,20 @@ def compute_building_dimensions(floor_plan_annotations: dict) -> dict:
     dims = floor_plan_annotations['dimensions_mm']
     page = floor_plan_annotations['page_size']
 
-    # Only consider dimensions in the ground floor area (left ~40% of page for this layout)
-    ground_floor_x_limit = page['width'] * 0.45
+    # Only consider dimensions in the ground floor area (the leftmost floor plan block)
+    # We find the large horizontal gap between floor plans in the top chain to set the limit
+    min_y = min((d['y'] for d in dims), default=0)
+    top_candidates = sorted([d for d in dims if abs(d['y'] - min_y) < 30], key=lambda d: d['x'])
+    
+    ground_floor_x_limit = page['width']
+    for i in range(len(top_candidates) - 1):
+        if top_candidates[i+1]['x'] - top_candidates[i]['x'] > 1000:
+            ground_floor_x_limit = top_candidates[i]['x'] + 500
+            break
+            
+    if ground_floor_x_limit == page['width'] and page['width'] > 3000:
+        ground_floor_x_limit = page['width'] * 0.45  # fallback for excessively wide pages
+        
     ground_dims = [d for d in dims if d['x'] < ground_floor_x_limit]
 
     # --- Find the LEFT-SIDE vertical chain (building length) ---
@@ -102,7 +120,21 @@ def compute_building_dimensions(floor_plan_annotations: dict) -> dict:
         [d for d in ground_dims if abs(d['x'] - min_x) < 30],
         key=lambda d: d['y']
     )
-    total_length_mm = sum(d['value'] for d in left_chain) if left_chain else 0
+    left_chain_sum = sum(d['value'] for d in left_chain) if left_chain else 0
+
+    # Look for an overall length dimension near the left chain (slightly offset in x)
+    left_overall_candidates = [
+        d for d in ground_dims
+        if 30 < abs(d['x'] - min_x) < 80
+        and d['value'] > 5000
+    ]
+    overall_length = max((d['value'] for d in left_overall_candidates), default=0)
+
+    # Use overall if it exists and is plausible (within 30% of chain sum)
+    if overall_length > 0 and left_chain_sum > 0 and abs(overall_length - left_chain_sum) / left_chain_sum < 0.30:
+        total_length_mm = overall_length
+    else:
+        total_length_mm = left_chain_sum
 
     # The largest single value in the left chain is typically the main heated section
     heated_length_mm = max((d['value'] for d in left_chain), default=0)
@@ -114,16 +146,23 @@ def compute_building_dimensions(floor_plan_annotations: dict) -> dict:
         [d for d in ground_dims if abs(d['y'] - min_y) < 15],
         key=lambda d: d['x']
     )
-    total_width_mm = sum(d['value'] for d in top_chain) if top_chain else 0
+    top_chain_sum = sum(d['value'] for d in top_chain) if top_chain else 0
 
-    # Look for a labeled overall width (a single dimension at a slightly different y, close to the top chain)
-    # This is the main building width without extensions
-    overall_width_dims = [
+    # Look for an overall width dimension near top chain (slightly offset in y)
+    top_overall_candidates = [
         d for d in ground_dims
-        if abs(d['y'] - min_y) > 10 and abs(d['y'] - min_y) < 40
-        and d['value'] > 5000  # must be a significant dimension
+        if 15 < abs(d['y'] - min_y) < 50
+        and d['value'] > 5000
     ]
-    heated_width_mm = max((d['value'] for d in overall_width_dims), default=total_width_mm)
+    overall_width = max((d['value'] for d in top_overall_candidates), default=0)
+
+    # Use overall if it exists and is plausible (within 30% of chain sum)
+    if overall_width > 0 and top_chain_sum > 0 and abs(overall_width - top_chain_sum) / top_chain_sum < 0.30:
+        total_width_mm = overall_width
+    else:
+        total_width_mm = top_chain_sum
+
+    heated_width_mm = max(overall_width, total_width_mm)
 
     total_perimeter_mm = 2 * (total_length_mm + total_width_mm)
     heated_perimeter_mm = 2 * (heated_length_mm + heated_width_mm)
@@ -136,7 +175,9 @@ def compute_building_dimensions(floor_plan_annotations: dict) -> dict:
         'total_perimeter_mm': total_perimeter_mm,
         'heated_perimeter_mm': heated_perimeter_mm,
         'left_chain': [d['value'] for d in left_chain],
+        'left_chain_sum': left_chain_sum,
         'top_chain': [d['value'] for d in top_chain],
+        'top_chain_sum': top_chain_sum,
     }
 
 
@@ -176,19 +217,30 @@ def compute_wall_height(section_annotations: dict, facade_annotations: dict) -> 
     from collections import Counter
     freq = Counter([round(v, 2) for v in relative_values])
 
-    ridge_level = max(relative_values)
-
     # Use original values rounded to 3 places but mapped to their group frequencies
     rounded_vals = [round(v, 3) for v in relative_values]
     distinct_levels = sorted(list(set(rounded_vals)), reverse=True)
     
-    eave_level = ridge_level  # fallback
-    
-    valid_levels = [level for level in distinct_levels if level < ridge_level - 0.3 and level > 0]
-    if valid_levels:
-        # Pick the level with highest frequency (using 2 decimal places mapping), on tie, pick highest level
-        valid_levels.sort(key=lambda lvl: (freq[round(lvl, 2)], lvl), reverse=True)
-        eave_level = valid_levels[0]
+    # 1. Determine eave level FIRST. It's the most frequent relative elevation > 1.0.
+    # On tie, pick the lower one (prefer primary eave over upper eaves/ridges).
+    positive_levels = [lvl for lvl in distinct_levels if lvl > 1.0]
+    if not positive_levels:
+        eave_level = max(distinct_levels) if distinct_levels else 3.0
+    else:
+        # Sort by: highest frequency first, then lowest level on tie
+        positive_levels.sort(key=lambda lvl: (-freq[round(lvl, 2)], lvl))
+        eave_level = positive_levels[0]
+
+    # 2. Determine ridge level. It is the highest level above eave that shares the MAXIMUM frequency 
+    # among all levels significantly above the eave (e.g. > +0.5m).
+    # This filters out chimneys, which are higher but usually annotated less frequently than the true ridge.
+    levels_above_eave = [lvl for lvl in distinct_levels if lvl >= eave_level + 0.5]
+    if not levels_above_eave:
+        ridge_level = max(relative_values) if relative_values else eave_level # fallback
+    else:
+        max_freq_above = max(freq[round(lvl, 2)] for lvl in levels_above_eave)
+        ridge_candidates = [lvl for lvl in levels_above_eave if freq[round(lvl, 2)] == max_freq_above]
+        ridge_level = max(ridge_candidates)
 
     wall_height_m = eave_level - max(datum, 0.0)  # height from datum (or 0.0) to eave
     wall_height_mm = round(wall_height_m * 1000)

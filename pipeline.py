@@ -20,42 +20,10 @@ from prompts import ORCHESTRATOR_PROMPT, FACADE_PROMPT
 from calculations import calculate_quantities
 
 FACADE_META = {
-    'north': {
-        'direction_fi': 'pohjoinen',
-        'suuntaan': 'POHJOISEEN',
-        'is_gable': False,
-        'side_description': 'This is a LONG SIDE of the building.',
-        'gable_note': 'This facade does NOT have a gable triangle — it is a rectangular wall only.',
-    },
-    'south': {
-        'direction_fi': 'etelä',
-        'suuntaan': 'ETELÄÄN',
-        'is_gable': False,
-        'side_description': 'This is a LONG SIDE of the building.',
-        'gable_note': 'This facade does NOT have a gable triangle — it is a rectangular wall only.',
-    },
-    'east': {
-        'direction_fi': 'itä',
-        'suuntaan': 'ITÄÄN',
-        'is_gable': True,
-        'side_description': 'This is a SHORT/GABLE END of the building.',
-        'gable_note': (
-            'This facade HAS a gable triangle above the eave level. '
-            'Find the räystäs (eave) and harjakorkeus (ridge) elevation markers in the section drawing. '
-            'Report has_gable_triangle=true and calculate gable_triangle_height_mm = (ridge_level - eave_level) * 1000.'
-        ),
-    },
-    'west': {
-        'direction_fi': 'länsi',
-        'suuntaan': 'LÄNTEEN',
-        'is_gable': True,
-        'side_description': 'This is a SHORT/GABLE END of the building.',
-        'gable_note': (
-            'This facade HAS a gable triangle above the eave level. '
-            'Find the räystäs (eave) and harjakorkeus (ridge) elevation markers in the section drawing. '
-            'Report has_gable_triangle=true and calculate gable_triangle_height_mm = (ridge_level - eave_level) * 1000.'
-        ),
-    },
+    'north': {'direction_fi': 'pohjoinen', 'suuntaan': 'POHJOISEEN'},
+    'south': {'direction_fi': 'etelä', 'suuntaan': 'ETELÄÄN'},
+    'east': {'direction_fi': 'itä', 'suuntaan': 'ITÄÄN'},
+    'west': {'direction_fi': 'länsi', 'suuntaan': 'LÄNTEEN'},
 }
 
 
@@ -103,7 +71,7 @@ def call_gemini_vision(image_bytes: bytes, prompt: str, additional_images: list 
     )
 
 
-def identify_building_outline(floor_plan_image: bytes, annotations: dict) -> dict:
+def identify_building_outline(floor_plan_image: bytes, annotations: dict, bldg_dims: dict) -> dict:
     """Phase 2: one Gemini call to identify the heated building envelope."""
     print("  Calling Gemini — building outline identification...")
 
@@ -111,6 +79,7 @@ def identify_building_outline(floor_plan_image: bytes, annotations: dict) -> dic
         dimensions_json=json.dumps(annotations['dimensions_mm'], indent=2),
         room_labels_json=json.dumps(annotations['room_labels'], indent=2),
         structure_labels_json=json.dumps(annotations['structure_labels'], indent=2),
+        programmatic_dims_json=json.dumps(bldg_dims, indent=2),
     )
 
     result = call_gemini_vision(floor_plan_image, prompt)
@@ -132,18 +101,31 @@ def identify_building_outline(floor_plan_image: bytes, annotations: dict) -> dic
     return result
 
 
-def analyze_facade(direction: str, facade_image: bytes, section_image: bytes, wall_segment: dict) -> dict:
+def analyze_facade(direction: str, facade_image: bytes, section_image: bytes,
+                   wall_segment: dict, wall_length_mm: int, is_gable_end: bool) -> dict:
     """Phase 3: one Gemini call per facade to extract openings and heights."""
     print(f"  Calling Gemini — {direction} facade analysis...")
 
     meta = FACADE_META[direction]
+
+    if is_gable_end:
+        wall_type_label = "GABLE END (pääty)"
+        gable_instruction = ("Gable end walls have a triangular area above the eave. "
+                             "Set has_gable_triangle=true and determine gable_triangle_height_mm "
+                             "from elevation markers (ridge_level - eave_level) * 1000.")
+    else:
+        wall_type_label = "LONG WALL (pitkä seinä)"
+        gable_instruction = ("Long walls do NOT have gable triangles. "
+                             "Set has_gable_triangle=false and gable_triangle_height_mm=0.")
+
     prompt = FACADE_PROMPT.format(
         direction_fi=meta['direction_fi'],
         suuntaan=meta['suuntaan'],
         direction_en=direction,
         wall_segment_json=json.dumps(wall_segment, indent=2),
-        side_description=meta['side_description'],
-        gable_note=meta['gable_note'],
+        wall_length_mm=wall_length_mm,
+        wall_type_label=wall_type_label,
+        gable_instruction=gable_instruction,
     )
 
     result = call_gemini_vision(facade_image, prompt, additional_images=[section_image])
@@ -204,10 +186,14 @@ def run_pipeline(floor_plan_path: str, facades_path: str, section_path: str,
     for direction, bbox in FACADE_CROPS.items():
         facade_images[direction] = render_cropped_region(facades_path, 0, bbox, dpi=200)
 
-    # ── PHASE 2: Building outline (LLM validates, but dimensions are programmatic) ──
+    # ── PHASE 2: Building outline (LLM calculates dimensions) ──
     progress(2, "Identifying building outline...")
 
-    outline_result = identify_building_outline(floor_plan_image, floor_ann)
+    outline_result = identify_building_outline(floor_plan_image, floor_ann, bldg_dims)
+    
+    # Use LLM's dynamically calculated perimeters if available, else fallback
+    total_perimeter_mm = outline_result.get('total_perimeter_mm') or bldg_dims['total_perimeter_mm']
+    heated_perimeter_mm = outline_result.get('heated_perimeter_mm') or bldg_dims['heated_perimeter_mm']
 
     # Build wall segment lookup by direction
     wall_segments = {
@@ -218,12 +204,38 @@ def run_pipeline(floor_plan_path: str, facades_path: str, section_path: str,
     # ── PHASE 3: Per-facade analysis ──────────────────────────────────────────
     facade_results = []
 
+    # Determine gable assignment: N/S = long sides (no gable), E/W = short/gable ends
+    # Use heated dimensions for facade wall lengths (excludes porch/storage extensions)
+    prog_length = bldg_dims['heated_length_mm'] or bldg_dims['total_length_mm']
+    prog_width = bldg_dims['heated_width_mm'] or bldg_dims['total_width_mm']
+    facade_config = {
+        'north': {'wall_length_mm': prog_length, 'is_gable_end': False},
+        'south': {'wall_length_mm': prog_length, 'is_gable_end': False},
+        'east':  {'wall_length_mm': prog_width,  'is_gable_end': True},
+        'west':  {'wall_length_mm': prog_width,  'is_gable_end': True},
+    }
+
     for i, direction in enumerate(['north', 'south', 'east', 'west'], 1):
         progress(3, f"Analyzing facades ({i}/4): {direction}...")
 
         wall_seg = wall_segments.get(direction, {})
+        cfg = facade_config[direction]
         try:
-            data = analyze_facade(direction, facade_images[direction], section_image, wall_seg)
+            data = analyze_facade(direction, facade_images[direction], section_image,
+                                  wall_seg, cfg['wall_length_mm'], cfg['is_gable_end'])
+
+            # Belt-and-suspenders: override LLM values with programmatic data
+            data['wall_length_mm'] = cfg['wall_length_mm']
+            if not cfg['is_gable_end']:
+                data.setdefault('wall_height_mm', {})['has_gable_triangle'] = False
+                data.setdefault('wall_height_mm', {})['gable_triangle_height_mm'] = 0
+
+            # Cross-check wall height against programmatic value
+            llm_h = data.get('wall_height_mm', {}).get('from_ground_to_eave', 0)
+            if llm_h and wall_h['wall_height_mm'] and abs(llm_h - wall_h['wall_height_mm']) / wall_h['wall_height_mm'] > 0.10:
+                print(f"  [WARN] {direction} height mismatch: LLM={llm_h}mm vs programmatic={wall_h['wall_height_mm']}mm, using programmatic")
+                data['wall_height_mm']['from_ground_to_eave'] = wall_h['wall_height_mm']
+
             facade_results.append(data)
             n_openings = len(data.get('openings', []))
             h = data.get('wall_height_mm', {}).get('from_ground_to_eave', '?')
@@ -231,42 +243,22 @@ def run_pipeline(floor_plan_path: str, facades_path: str, section_path: str,
             print(f"  {direction}: length={length}mm, height={h}mm, {n_openings} opening type(s)")
         except Exception as e:
             print(f"  [ERROR] {direction} facade failed: {e}")
-            # Use programmatic values for fallback
-            is_gable = direction in ('east', 'west')
-            fallback_length = bldg_dims['total_width_mm'] if is_gable else bldg_dims['total_length_mm']
             facade_results.append({
                 'facade_direction': direction,
                 'error': str(e),
                 'manual_review_needed': True,
                 'wall_height_mm': {
                     'from_ground_to_eave': wall_h['wall_height_mm'],
-                    'has_gable_triangle': is_gable,
-                    'gable_triangle_height_mm': wall_h['gable_height_mm'] if is_gable else 0,
+                    'has_gable_triangle': cfg['is_gable_end'],
+                    'gable_triangle_height_mm': wall_h['gable_height_mm'] if cfg['is_gable_end'] else 0,
                 },
-                'wall_length_mm': fallback_length,
+                'wall_length_mm': cfg['wall_length_mm'],
                 'openings': [],
                 'cladding_material': {
-                    'primary': 'VAAKAULKOVERHOUSPANEELI 28x170',
-                    'secondary': 'ULKOVERHOUSPANEELI 21x95',
                     'primary_coverage_percent': 70,
                     'secondary_coverage_percent': 30,
                 },
             })
-
-    # Override LLM wall lengths/heights with programmatic values
-    for f in facade_results:
-        d = f.get('facade_direction', '')
-        if d in ('north', 'south'):
-            f['wall_length_mm'] = bldg_dims['total_length_mm']
-        elif d in ('east', 'west'):
-            f['wall_length_mm'] = bldg_dims['total_width_mm']
-
-        wh = f.get('wall_height_mm', {})
-        wh['from_ground_to_eave'] = wall_h['wall_height_mm']
-        is_gable = d in ('east', 'west')
-        wh['has_gable_triangle'] = is_gable
-        wh['gable_triangle_height_mm'] = wall_h['gable_height_mm'] if is_gable else 0
-        f['wall_height_mm'] = wh
 
     # ── PHASE 4: Quantity calculation ─────────────────────────────────────────
     progress(4, "Calculating quantities...")
